@@ -2,7 +2,20 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBlog, faBookReader, faCoffee, faEdit, faFilter, faHeading, faImage, faImages, faPlusCircle, faRecycle, faShapes, faSmile, faTable, faTrashAlt, faUserSecret } from '@fortawesome/free-solid-svg-icons'
+import { faBlog,
+    faBookReader,
+    faCoffee, 
+    faEdit, 
+    faFilter, 
+    faHeading, 
+    faImages, 
+    faPlusCircle, 
+    faRecycle, 
+    faShapes, 
+    faTable, 
+    faTrashAlt, 
+    faUserSecret 
+} from '@fortawesome/free-solid-svg-icons'
 
 function Blog(props) {
 
@@ -18,6 +31,9 @@ function Blog(props) {
     const [token_id ,setTokenId ] = useState(0)
 
     const [picture, setPicture] = useState('')
+
+    const [g, setG] = useState(null)
+
 
 
     useEffect(()=>{
@@ -37,6 +53,9 @@ function Blog(props) {
             
         })
     }
+
+    console.log("Abhishek Sir",data)
+
     
     useEffect(()=>{
         // getData()
@@ -47,13 +66,26 @@ function Blog(props) {
     const handleUpolad = event => {
         event.preventDefault();
         setPicture(event.target.files[0])
+
+        // setUpdatePic(event.target.files[0].name)
+        
+        console.log("dddddddddddd",event.target.files[0].name);
+        setG(-1)
+
+
+        // let data = new FormData();
+        // data.append('picture', picture)
+        // setUpdatePic(data)
+
+
+
       }
 
     // pushing the data into a server
     const postData = (e) => {
         e.preventDefault()
         setEdit(-1)
-
+        
         let data = new FormData();
         data.append('user', `http://127.0.0.1:8000/users/${token_id}/`)
         data.append('title', e.currentTarget['title'].value)
@@ -61,6 +93,8 @@ function Blog(props) {
         data.append('date',e.currentTarget['date'].value)
         data.append('category',e.currentTarget['category'].value)
         data.append('picture', picture)
+
+        
 
         axios.post('http://127.0.0.1:8000/bloggers/', data)
             .then(res => {
@@ -98,7 +132,7 @@ function Blog(props) {
         data.append('description',e.currentTarget['description'].value )
         data.append('date',e.currentTarget['date'].value)
         data.append('category',e.currentTarget['category'].value)
-        data.append('picture', picture)
+        g != null && data.append('picture', picture)
         
         axios.put(`http://127.0.0.1:8000/bloggers/${id}/`,data)
         .then(resp=>{
@@ -109,17 +143,20 @@ function Blog(props) {
             setDate(0)
             setCategory('')
             getData()
+            setPicture('')
         })        
     }
 
-    const editTakeId = (d,t,desc,dat,cat)=>{
+    const editTakeId = (d,t,desc,dat,cat,pict)=>{
+
             setId(d)
             setEdit(d)
             setTitle(t)
             setDescription(desc)
             setDate(dat)
             setCategory(cat)
-
+            setPicture(pict)
+            
 
 
 
@@ -145,7 +182,10 @@ function Blog(props) {
         setDescription('')
         setDate(0)
         setCategory('')
+        setPicture('')
         getData()
+        setG(null)
+        
     }
 
     console.log("data check from state",props.getUserData);
@@ -156,25 +196,25 @@ function Blog(props) {
             <div className="container">
                 <div className="row ">
                 {data.map(item =>
-                    <div className=" col-12 col-sm-8 col-md-6 col-lg-4">
+                    <div className=" col-12 col-sm-8 col-md-6 col-lg-4" key={item.id} >
                     <div className="card mb-3">
-                        <img key={item.id} className="card-img" height={200} width={60} src={item.picture} alt="image"/>
+                        <img  className="card-img" height={200} width={60} src={item.picture} alt="image"/>
                         <div className="card-body">
-                        <h4 key={item.id} className="card-title">{item.title}</h4>
+                        <h4  className="card-title">{item.title}</h4>
                         <small className="text-muted cat">
                             <i className="far fa-clock text-info"></i> 30 minutes
                             <i className="fas fa-users text-info"></i> 4 portions
                         </small>
                         <p className="card-text"><small key={item.id} className="text-muted">{item.category}</small></p>
-                        <p key={item.id} className="card-text">{`${item.description.slice(0,15)}.....`}</p>
+                        <p  className="card-text">{`${item.description.slice(0,15)}.....`}</p>
                             {`http://127.0.0.1:8000/users/${props.token_with_id}/` == item.user && <button className="btn btn-sm btn-outline-primary" onClick={()=>{deleteBlog(item.id)}} ><FontAwesomeIcon icon={faTrashAlt} />Delete</button>}
-                            {`http://127.0.0.1:8000/users/${props.token_with_id}/` == item.user && <button className="btn btn-sm btn-outline-dark"  data-bs-toggle="modal" data-bs-target="#staticBlog" onClick={()=>{editTakeId(item.id,item.title,item.description,item.date,item.category)}}><FontAwesomeIcon icon={faEdit} />Edit Blog</button>}   
+                            {`http://127.0.0.1:8000/users/${props.token_with_id}/` == item.user && <button className="btn btn-sm btn-outline-dark"  data-bs-toggle="modal" data-bs-target="#staticBlog" onClick={()=>{editTakeId(item.id,item.title,item.description,item.date,item.category,item.picture)}}><FontAwesomeIcon icon={faEdit} />Edit Blog</button>}   
                             <button type="button" onClick={()=>{modalView(item.id,item.title,item.description,item.date,item.category,item.picture)}}  className="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                             Full Blog    <FontAwesomeIcon icon={faBookReader} />
                             </button>                     
                         </div>
                         <div className="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
-                        <div key={item.id} className="views">{item.date}
+                        <div  className="views">{item.date}
                         </div>
                         <div className="stats">
                             <i className="far fa-eye"></i> 1347
@@ -260,7 +300,7 @@ function Blog(props) {
                         </div><br/>
                         <div className="col-md-6">
                                 <label for="validationDefault02" className="form-label"><FontAwesomeIcon icon={faImages} />Pic</label>
-                                <input type="file" onChange={handleUpolad} accept="picture/png,picture/jpg, picture/jpeg " placeholder="Type Your Password" className="form-control" id="validationDefault02" required/>
+                                <input type="file" onChange={handleUpolad} accept="picture/png,picture/jpg, picture/jpeg " className="form-control" id="validationDefault02" />
                             </div>
                         <div className="col-12 mt-4 " >
                             {edit == -1 ? <button className="btn btn-dark mt-3" type="submit"><FontAwesomeIcon icon={faPlusCircle} />Add Blog</button>:
@@ -297,3 +337,13 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Blog)
+
+
+
+
+
+
+
+
+
+
