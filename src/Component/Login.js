@@ -6,6 +6,8 @@ import { faSignInAlt,faUser ,faKey} from '@fortawesome/free-solid-svg-icons'
 
 
 function Login(props) {
+    const [errorMsg, setErrorMsg] = useState('')
+    const [addMsg, setAddMsg] = useState('')
 
 
     useEffect(()=>{
@@ -20,12 +22,19 @@ function Login(props) {
             username : e.currentTarget['username'].value,
             password : e.currentTarget['password'].value
         }
-
-        axios.post('http://127.0.0.1:8000/api-auth/',userCredentialsLogin)
+        axios.post('http://blogappback.herokuapp.com/api-auth/',userCredentialsLogin)
         .then(response=>{
             console.log("token data",response.data);
             props.history.push('/')
             props.send_token_to_store(response.data)
+        })
+        .catch(err=>{
+            console.log(err.data)
+            setErrorMsg("username and password is invalid !!")
+            setInterval(() => {
+                setErrorMsg('')
+            }, 2000);
+            
         })
 
     }
@@ -43,6 +52,7 @@ function Login(props) {
         <>
                 <div id="login-container" className="row justify-content-center">
                     <div className="col-xl-6 col-lg-7 col-md-9">
+                    <h2>{errorMsg}</h2> 
                         <div className="card shadow-lg bg-success p-3 mb-5">
                             <div className="card-body p-4 p-md-5 mx-3 rounded ">
                                 <h1><FontAwesomeIcon icon={faSignInAlt} />Login</h1><br/><br/><br/>
@@ -62,7 +72,8 @@ function Login(props) {
                             </div>                            
                         </div>
                     </div>
-                </div> 
+                </div>
+                
         </>
     )
 }

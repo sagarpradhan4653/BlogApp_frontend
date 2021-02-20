@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,6 +7,7 @@ import { faBlog, faEdit, faNewspaper, faUser, faUserEdit, faUserTimes } from '@f
 
 
 function Header(props) {
+
 
     return (
         <>
@@ -34,6 +35,7 @@ function Header(props) {
                         {props.mainToken && <button className="btn btn-lg btn-dark" data-bs-toggle="modal" data-bs-target="#staticBlog" ><FontAwesomeIcon icon={faNewspaper} /> Create Blog</button>}
                     </ul>
                     </div>
+
                 </div>
             </nav>
         </>

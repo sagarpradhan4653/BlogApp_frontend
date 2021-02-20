@@ -12,6 +12,7 @@ import Register from './Component/Register';
 
 
 
+
 function App(props) { 
 
   useEffect(() => { // for setting token 
@@ -20,7 +21,7 @@ function App(props) {
 
   return (
 
-    <div className="App">
+    <div className="App" >
       <BrowserRouter>
         <Header/>
         <Switch>

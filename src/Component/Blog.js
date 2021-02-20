@@ -34,6 +34,8 @@ function Blog(props) {
 
     const [g, setG] = useState(null)
 
+    // const baseUrlBlogger = "https://blogappback.herokuapp.com/bloggers/"
+
 
 
     useEffect(()=>{
@@ -45,7 +47,7 @@ function Blog(props) {
 
 
     const getData = () => {
-        axios.get('http://127.0.0.1:8000/bloggers/')
+        axios.get('https://blogappback.herokuapp.com/bloggers/')
         .then(res => {
             setData(res.data)
             console.log(res.data)
@@ -87,7 +89,7 @@ function Blog(props) {
         setEdit(-1)
         
         let data = new FormData();
-        data.append('user', `http://127.0.0.1:8000/users/${token_id}/`)
+        data.append('user', `https://blogappback.herokuapp.com/users/${token_id}/`)
         data.append('title', e.currentTarget['title'].value)
         data.append('description',e.currentTarget['description'].value )
         data.append('date',e.currentTarget['date'].value)
@@ -96,7 +98,7 @@ function Blog(props) {
 
         
 
-        axios.post('http://127.0.0.1:8000/bloggers/', data)
+        axios.post('https://blogappback.herokuapp.com/bloggers/', data)
             .then(res => {
                 console.log(res.data);
                 getData() // it will call to render the page for showing the data
@@ -111,7 +113,7 @@ function Blog(props) {
     }
 
     const deleteBlog = (i) =>{ // for deleting blog
-        axios.delete(`http://127.0.0.1:8000/bloggers/${i}/`)
+        axios.delete(`https://blogappback.herokuapp.com/bloggers/${i}/`)
         .then(res => {
             console.log(res.data);
             getData() // when delete button will click it will call the getData function for render the component
@@ -127,14 +129,14 @@ function Blog(props) {
 
 
         let data = new FormData();
-        data.append('user', `http://127.0.0.1:8000/users/${token_id}/`)
+        data.append('user', `https://blogappback.herokuapp.com/users/${token_id}/`)
         data.append('title', e.currentTarget['title'].value)
         data.append('description',e.currentTarget['description'].value )
         data.append('date',e.currentTarget['date'].value)
         data.append('category',e.currentTarget['category'].value)
         g != null && data.append('picture', picture)
         
-        axios.put(`http://127.0.0.1:8000/bloggers/${id}/`,data)
+        axios.put(`https://blogappback.herokuapp.com/bloggers/${id}/`,data)
         .then(resp=>{
             console.log(resp.data);
             //for set the value of input empty
@@ -201,14 +203,14 @@ function Blog(props) {
                         <img  className="card-img" height={200} width={60} src={item.picture} alt="image"/>
                         <div className="card-body">
                         <h4  className="card-title">{item.title}</h4>
-                        <small className="text-muted cat">
+                        {/* <small className="text-muted cat">
                             <i className="far fa-clock text-info"></i> 30 minutes
                             <i className="fas fa-users text-info"></i> 4 portions
-                        </small>
+                        </small> */}
                         <p className="card-text"><small key={item.id} className="text-muted">{item.category}</small></p>
                         <p  className="card-text">{`${item.description.slice(0,15)}.....`}</p>
-                            {`http://127.0.0.1:8000/users/${props.token_with_id}/` == item.user && <button className="btn btn-sm btn-outline-primary" onClick={()=>{deleteBlog(item.id)}} ><FontAwesomeIcon icon={faTrashAlt} />Delete</button>}
-                            {`http://127.0.0.1:8000/users/${props.token_with_id}/` == item.user && <button className="btn btn-sm btn-outline-dark"  data-bs-toggle="modal" data-bs-target="#staticBlog" onClick={()=>{editTakeId(item.id,item.title,item.description,item.date,item.category,item.picture)}}><FontAwesomeIcon icon={faEdit} />Edit Blog</button>}   
+                            {`https://blogappback.herokuapp.com/users/${props.token_with_id}/` == item.user && <button className="btn btn-sm btn-outline-primary" onClick={()=>{deleteBlog(item.id)}} ><FontAwesomeIcon icon={faTrashAlt} />Delete</button>}
+                            {`https://blogappback.herokuapp.com/users/${props.token_with_id}/` == item.user && <button className="btn btn-sm btn-outline-dark"  data-bs-toggle="modal" data-bs-target="#staticBlog" onClick={()=>{editTakeId(item.id,item.title,item.description,item.date,item.category,item.picture)}}><FontAwesomeIcon icon={faEdit} />Edit Blog</button>}   
                             <button type="button" onClick={()=>{modalView(item.id,item.title,item.description,item.date,item.category,item.picture)}}  className="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                             Full Blog    <FontAwesomeIcon icon={faBookReader} />
                             </button>                     
@@ -247,8 +249,6 @@ function Blog(props) {
                         </small>
                         <p className="card-text"><small  className="text-muted">{category}</small></p>
                         <p  className="card-text">{description}</p>
-                            {/* {`http://127.0.0.1:8000/users/${props.token_with_id}/` == item.user && <button className="btn btn-sm btn-outline-primary" onClick={()=>{deleteBlog(item.id)}} >Delete</button>}
-                            <button className="btn btn-sm btn-outline-dark" onClick={()=>{editTakeId(item.id,item.title,item.description,item.date,item.category)}}>Edit Blog</button>                         */}
                         </div>
                         <div className="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
                         <div  className="views"><FontAwesomeIcon icon={faTable} />{date}
