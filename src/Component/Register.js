@@ -15,7 +15,7 @@ function Register(props) {
             password: e.currentTarget['password'].value
         }
 
-        axios.post('http://blogappback.herokuapp.com/users/', userCredentialsRegister)
+        axios.post('https://blogappback.herokuapp.com/users/', userCredentialsRegister)
             .then(response => {
                 console.log("user credential response", response.data);
                 props.history.push('/Login') // push to login page

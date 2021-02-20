@@ -22,7 +22,7 @@ function Login(props) {
             username : e.currentTarget['username'].value,
             password : e.currentTarget['password'].value
         }
-        axios.post('http://blogappback.herokuapp.com/api-auth/',userCredentialsLogin)
+        axios.post('https://blogappback.herokuapp.com/api-auth/',userCredentialsLogin)
         .then(response=>{
             console.log("token data",response.data);
             props.history.push('/')
